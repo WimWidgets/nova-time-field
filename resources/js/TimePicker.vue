@@ -17,10 +17,6 @@ export default {
         placeholder: {
             type: String
         },
-        disabled: {
-            type: Boolean,
-            default: false,
-        },
         twelveHourTime: {
             type: Boolean,
             default: true,
