@@ -28,6 +28,8 @@ class FieldServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__ . '/config/nova-time-field.php', 'nova-time-field'
+        );
     }
 }
