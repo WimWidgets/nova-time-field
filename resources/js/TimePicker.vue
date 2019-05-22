@@ -24,6 +24,10 @@ export default {
         twelveHourTime: {
             type: Boolean,
             default: true,
+        },
+        inputFormat: {
+            type: String,
+            default: "H:i"
         }
     },
 
@@ -35,7 +39,7 @@ export default {
                 enableTime: true,
                 onClose: this.onChange,
                 noCalendar: true,
-                dateFormat: "H:i",
+                dateFormat: this.inputFormat,
                 allowInput: true,
                 time_24hr: !this.twelveHourTime,
             })

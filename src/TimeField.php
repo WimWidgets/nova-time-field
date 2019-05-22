@@ -42,6 +42,8 @@ class TimeField extends Field
         parent::__construct($name, $attribute, $resolveCallback ?? function ($value) {
             return Carbon::createFromFormat($this->outputFormat, $value)->format($this->inputFormat);
         });
+
+        $this->withMeta(['format' => $this->inputFormat]);
     }
 
     /**
