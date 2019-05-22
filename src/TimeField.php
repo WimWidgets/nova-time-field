@@ -17,6 +17,16 @@ class TimeField extends Field
     public $component = 'nova-time-field';
 
     /**
+     * @var string
+     */
+    protected $inputFormat;
+
+    /**
+     * @var string
+     */
+    protected $outputFormat;
+
+    /**
      * Create a new field.
      *
      * @param string      $name
@@ -27,8 +37,10 @@ class TimeField extends Field
      */
     public function __construct($name, $attribute = null, $resolveCallback = null)
     {
+        $this->getFormatsFromConfig();
+
         parent::__construct($name, $attribute, $resolveCallback ?? function ($value) {
-            return Carbon::createFromFormat('H:i', $value)->format('H:i');
+            return Carbon::createFromFormat($this->outputFormat, $value)->format($this->inputFormat);
         });
     }
 
@@ -45,6 +57,12 @@ class TimeField extends Field
     public function withTwelveHourTime()
     {
         return $this->withMeta(['twelveHourTime' => true]);
+    }
+
+    protected function getFormatsFromConfig()
+    {
+        $this->inputFormat = config('nova-time-field.input-format');
+        $this->outputFormat = config('nova-time-field.output-format');
     }
 
     /**
@@ -66,11 +84,11 @@ class TimeField extends Field
         if ($request->exists($requestAttribute) && $request[$requestAttribute]) {
             $sentData = $request[$requestAttribute];
 
-            if (DateTime::createFromFormat('H:i', $sentData) === false) {
+            if (DateTime::createFromFormat($this->inputFormat, $sentData) === false) {
                 throw new Exception('The field must contain a valid time.');
             }
 
-            $newDate = Carbon::createFromFormat('H:i', $request[$requestAttribute])->format('H:i');
+            $newDate = Carbon::createFromFormat($this->inputFormat, $request[$requestAttribute])->format($this->inputFormat);
             $model->{$attribute} = $newDate;
         }
     }
